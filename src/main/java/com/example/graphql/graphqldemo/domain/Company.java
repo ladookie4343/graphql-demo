@@ -5,10 +5,8 @@ import lombok.Data;
 
 @Data
 @Builder
-public class Job {
+public class Company {
     private String id;
-    private String companyId;
-    private String title;
+    private String name;
     private String description;
-    private Company company;
 }
