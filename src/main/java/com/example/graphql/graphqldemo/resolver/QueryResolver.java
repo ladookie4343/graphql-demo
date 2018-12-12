@@ -22,14 +22,6 @@ public class QueryResolver implements GraphQLQueryResolver {
     }
 
     public List<Job> getJobs(DataFetchingEnvironment env) {
-        GraphQLContext context = env.getContext();
-        Optional<HttpServletRequest> httpServletRequest = context.getHttpServletRequest();
-        String token = httpServletRequest
-                .map(req -> req.getHeader("Authorization"))
-                .filter(header -> !header.isEmpty())
-                .map(header -> header.replace("Bearer ", ""))
-                .map(String::toString)
-                .orElse(null);
         return DB.getJobs();
     }
 

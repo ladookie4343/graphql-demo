@@ -1,5 +1,7 @@
 package com.example.graphql.graphqldemo.domain;
 
+import com.example.graphql.graphqldemo.LoginRequest;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -9,6 +11,7 @@ import java.util.stream.Collectors;
 public class DB {
     private static List<Job> jobs;
     private static List<Company> companies;
+    private static List<User> users;
 
     static {
         Job job1 = Job.builder()
@@ -18,7 +21,7 @@ public class DB {
                 .description("we are looking for a great front end developer")
                 .build();
 
-        Company c1 = Company.builder().id("c1").name("foo").description("bar").build();
+        Company c1 = Company.builder().id("c1").name("bar").description("bar").build();
 
         c1.setJobs(Collections.singletonList(job1));
         job1.setCompany(c1);
@@ -30,7 +33,7 @@ public class DB {
                 .description("we are looking for a great back end developer")
                 .build();
 
-        Company c2 = Company.builder().id("c2").name("foo").description("bar").build();
+        Company c2 = Company.builder().id("c2").name("laducasoftware").description("bar").build();
 
         c2.setJobs(Collections.singletonList(job2));
         job2.setCompany(c2);
@@ -42,13 +45,37 @@ public class DB {
                 .description("we are looking for a poop developer")
                 .build();
 
-        Company c3 = Company.builder().id("c3").name("foo").description("bar").build();
+        Company c3 = Company.builder().id("c3").name("splitbudget").description("bar").build();
 
         c3.setJobs(Collections.singletonList(job3));
         job3.setCompany(c3);
 
+        User u1 = User.builder()
+                .id("u1")
+                .email("foo@bar.com")
+                .password("abc123")
+                .companyId("c1")
+                .build();
+
+        User u2 = User.builder()
+                .id("u2")
+                .email("foo@laducasoftware.com")
+                .password("abc123")
+                .companyId("c2")
+                .build();
+
+        User u3 = User.builder()
+                .id("u3")
+                .email("lucas@splitbudget.io")
+                .password("abc123")
+                .companyId("c3")
+                .build();
+
+
         jobs = new ArrayList<>(Arrays.asList(job1, job2, job3));
         companies = new ArrayList<>(Arrays.asList(c1, c2, c3));
+        users = new ArrayList<>(Arrays.asList(u1, u2, u3));
+
     }
 
     public static Job createJob(String companyId, String title, String description) {
@@ -85,5 +112,19 @@ public class DB {
 
     public static List<Company> getCompanies() {
         return companies;
+    }
+
+    public static List<User> getUsers() { return users; }
+
+    public static User getUser(LoginRequest req) {
+        List<User> users = DB.users.stream()
+                .filter(u -> u.getEmail().equals(req.getEmail()) && u.getPassword().equals(req.getPassword()))
+                .collect(Collectors.toList());
+
+        if (users.size() > 0) {
+            return users.get(0);
+        }
+
+        return null;
     }
 }
